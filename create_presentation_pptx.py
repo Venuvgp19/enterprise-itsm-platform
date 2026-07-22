@@ -247,10 +247,13 @@ def build_presentation():
         pb.font.size = Pt(11)
         pb.font.color.rgb = text_color
 
-    # Save Presentation
-    output_pptx = "Enterprise_ITSM_Platform_Presentation.pptx"
-    prs.save(output_pptx)
-    print(f"PowerPoint presentation successfully saved to: {output_pptx}")
+    # Save Presentation to both filenames
+    for fname in ["Agentic_AI_ITSM_Platform.pptx", "Enterprise_ITSM_Platform_Presentation.pptx"]:
+        try:
+            prs.save(fname)
+            print(f"PowerPoint presentation successfully saved to: {fname}")
+        except Exception as e:
+            print(f"Could not write to {fname} (file may be open in PowerPoint): {e}")
 
 if __name__ == '__main__':
     build_presentation()
