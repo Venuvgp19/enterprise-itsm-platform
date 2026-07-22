@@ -3,13 +3,19 @@
 
 ---
 
-## 📸 Platform Screenshots
+## 📸 Real Application Screenshots
 
-### 1. Incident Management Console & AI Routing Queue
+### 1. 📊 Live Dashboard & Ops Command Center
+![Command Dashboard Overview](docs/screenshots/dashboard_overview.png)
+
+### 2. 🎫 Incident Management Console & AI Routing Queue
 ![Incident Management Console](docs/screenshots/incident_list.png)
 
-### 2. Incident Triage, Diagnostic Work Notes & Activity Stream
+### 3. 🔍 Incident Detail, AI Diagnostic Work Notes & Activity Stream
 ![Incident Detail & Diagnostics](docs/screenshots/incident_detail.png)
+
+### 4. 📚 Continuous Knowledge Base & KEDB Synthesizer
+![Knowledge Base Catalog](docs/screenshots/knowledge_base.png)
 
 ---
 
@@ -76,6 +82,7 @@ npm run dev:frontend
 ## 📖 API Documentation
 
 - **Next.js Frontend App**: [http://localhost:3000](http://localhost:3000)
+- **Command Dashboard**: [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
 - **Incident Console**: [http://localhost:3000/incidents](http://localhost:3000/incidents)
 - **AI Knowledge Synthesizer**: [http://localhost:3000/knowledge](http://localhost:3000/knowledge)
 - **NestJS Swagger OpenAPI Specs**: [http://localhost:4000/api/docs](http://localhost:4000/api/docs)
