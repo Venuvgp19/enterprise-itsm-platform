@@ -1,331 +1,256 @@
-import sys
 import os
 from pptx import Presentation
 from pptx.util import Inches, Pt
-from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
+from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 
-def build_pptx():
+def build_presentation():
     prs = Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
-
-    # Color Palette (Dark Modern ITSM Theme)
-    BG_DARK = RGBColor(15, 23, 42)       # Slate 900
-    CARD_BG = RGBColor(30, 41, 59)      # Slate 800
-    TEXT_WHITE = RGBColor(248, 250, 252) # Slate 50
-    TEXT_MUTED = RGBColor(148, 163, 184)# Slate 400
-    ACCENT_INDIGO = RGBColor(129, 140, 248) # Indigo 400
-    ACCENT_PURPLE = RGBColor(192, 132, 252) # Purple 400
-    ACCENT_EMERALD = RGBColor(52, 211, 153) # Emerald 400
-    ACCENT_AMBER = RGBColor(251, 191, 36)  # Amber 400
-    BORDER_COLOR = RGBColor(51, 65, 85)   # Slate 700
-
     blank_layout = prs.slide_layouts[6]
 
-    def add_bg(slide):
+    # Theme Colors
+    bg_color = RGBColor(11, 15, 25)          # Dark Slate
+    card_bg = RGBColor(18, 24, 38)           # Card Panel
+    title_color = RGBColor(255, 255, 255)    # White
+    text_color = RGBColor(203, 213, 225)     # Slate 300
+    brand_blue = RGBColor(99, 102, 241)      # Indigo 500
+    accent_emerald = RGBColor(16, 185, 129)  # Emerald 500
+    accent_amber = RGBColor(245, 158, 11)    # Amber 500
+
+    def apply_background(slide):
         bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
         bg.fill.solid()
-        bg.fill.fore_color.rgb = BG_DARK
+        bg.fill.fore_color.rgb = bg_color
         bg.line.fill.background()
-        return bg
 
-    def add_header(slide, title_text, category_text="ENTERPRISE AGENTIC AI ITSM"):
-        # Category Badge
-        cat_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.4), Inches(10), Inches(0.4))
+    def add_header(slide, title_text, category_text="ENTERPRISE ITSM PLATFORM"):
+        apply_background(slide)
+        
+        # Category Tag
+        cat_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.4), Inches(11.733), Inches(0.3))
         tf_cat = cat_box.text_frame
         tf_cat.word_wrap = True
         p_cat = tf_cat.paragraphs[0]
         p_cat.text = category_text.upper()
         p_cat.font.size = Pt(10)
         p_cat.font.bold = True
-        p_cat.font.color.rgb = ACCENT_INDIGO
+        p_cat.font.color.rgb = brand_blue
 
         # Main Title
-        title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.7), Inches(11.5), Inches(0.8))
+        title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.65), Inches(11.733), Inches(0.6))
         tf_title = title_box.text_frame
         tf_title.word_wrap = True
         p_title = tf_title.paragraphs[0]
         p_title.text = title_text
-        p_title.font.size = Pt(24)
+        p_title.font.size = Pt(22)
         p_title.font.bold = True
-        p_title.font.color.rgb = TEXT_WHITE
+        p_title.font.color.rgb = title_color
 
-    def add_card(slide, left, top, width, height, bg_color=CARD_BG, border_color=BORDER_COLOR):
-        shape = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(left), Inches(top), Inches(width), Inches(height))
-        shape.fill.solid()
-        shape.fill.fore_color.rgb = bg_color
-        shape.line.color.rgb = border_color
-        shape.line.width = Pt(1)
-        return shape
-
-    # ==================== SLIDE 1: TITLE SLIDE ====================
+    # SLIDE 1: Title Slide
     slide1 = prs.slides.add_slide(blank_layout)
-    add_bg(slide1)
+    apply_background(slide1)
 
-    # Decorative Gradient Card Background
-    add_card(slide1, 1.0, 1.2, 11.333, 5.1, bg_color=RGBColor(24, 32, 52), border_color=ACCENT_INDIGO)
+    # Accent Glow shape
+    accent_box = slide1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.8), Inches(11.733), Inches(4.2))
+    accent_box.fill.solid()
+    accent_box.fill.fore_color.rgb = card_bg
+    accent_box.line.color.rgb = brand_blue
 
-    tb = slide1.shapes.add_textbox(Inches(1.5), Inches(1.8), Inches(10.333), Inches(2.0))
-    tf = tb.text_frame
-    tf.word_wrap = True
-    p = tf.paragraphs[0]
-    p.text = "Enterprise Agentic AI ITSM Platform"
-    p.font.size = Pt(36)
-    p.font.bold = True
-    p.font.color.rgb = TEXT_WHITE
+    tf1 = accent_box.text_frame
+    tf1.word_wrap = True
+    p1 = tf1.paragraphs[0]
+    p1.text = "Enterprise IT Service Management (ITSM) Platform"
+    p1.font.size = Pt(32)
+    p1.font.bold = True
+    p1.font.color.rgb = title_color
 
-    p2 = tf.add_paragraph()
-    p2.text = "100% Autonomous Ticket Routing & Knowledge Base SOP Synthesis"
+    p2 = tf1.add_paragraph()
+    p2.text = "\nNext-Gen Autonomous AI Ticket Routing & Continuous Knowledge Base Architecture"
     p2.font.size = Pt(18)
-    p2.font.color.rgb = ACCENT_PURPLE
+    p2.font.color.rgb = brand_blue
 
-    tb_desc = slide1.shapes.add_textbox(Inches(1.5), Inches(3.8), Inches(10.333), Inches(2.0))
-    tf_desc = tb_desc.text_frame
-    tf_desc.word_wrap = True
-    
-    bullets = [
-      "🤖 Autonomous Ticket Routing: NVIDIA Nemotron 3 Ultra 550B LLM Engine",
-      "🧠 Agentic Knowledge Base Generator: Meta Llama 3.3 70B Instruct Engine",
-      "🔌 Model Context Protocol (MCP): Native stdio transport with Auto JWT Auth Flow",
-      "💾 Resilient Persistence Layer: 1,000 Incidents & SOPs saved to disk zero data loss"
-    ]
-    for b in bullets:
-        pb = tf_desc.add_paragraph()
-        pb.text = b
-        pb.font.size = Pt(14)
-        pb.font.color.rgb = TEXT_MUTED
+    p3 = tf1.add_paragraph()
+    p3.text = "\n\n• Continuous Agentic AI Ticket Router (NVIDIA Nemotron 3 550B LLM)\n• Continuous Knowledge Base & KEDB Synthesizer (Meta Llama 3.3 70B LLM)\n• 100% Persistent JSON Database File (Zero Data Loss on Restart)\n• Native Stdio Model Context Protocol (MCP) Server Integration"
+    p3.font.size = Pt(14)
+    p3.font.color.rgb = text_color
 
-    # ==================== SLIDE 2: EXECUTIVE SUMMARY ====================
+    # SLIDE 2: Live Dashboard Overview
     slide2 = prs.slides.add_slide(blank_layout)
-    add_bg(slide2)
-    add_header(slide2, "Executive Summary & Core Platform Capabilities")
+    add_header(slide2, "1. Live Dashboard & Command Center Overview", "EXECUTIVE SERVICE MANAGEMENT DEMO")
 
-    cards_s2 = [
-        ("Zero-Human Ticket Triage", "100% LLM-driven incident classification & technician routing using NVIDIA Nemotron 3 550B with backoff protection.", ACCENT_INDIGO),
-        ("Automated SOP Synthesis", "Scans diagnostic work notes across 1,000 incidents in 10-ticket chunks using Meta Llama 3.3 70B Instruct.", ACCENT_PURPLE),
-        ("MCP Server Integration", "Stdio transport protocol with automatic JWT auth flow, empowering external AI agents to manage ITSM entities.", ACCENT_EMERALD),
-        ("Strict Deduplication", "Semantic token overlap check (>50%) ensures 100% unique problem solutions with persistent analyzed incident tracking.", ACCENT_AMBER),
+    img_path_dash = "docs/screenshots/dashboard_overview.png"
+    if os.path.exists(img_path_dash):
+        slide2.shapes.add_picture(img_path_dash, Inches(0.8), Inches(1.4), width=Inches(8.2))
+
+    card2 = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.4), Inches(3.3), Inches(5.4))
+    card2.fill.solid()
+    card2.fill.fore_color.rgb = card_bg
+    card2.line.color.rgb = brand_blue
+    tf2 = card2.text_frame
+    tf2.word_wrap = True
+
+    p = tf2.paragraphs[0]
+    p.text = "Dashboard Highlights"
+    p.font.size = Pt(16)
+    p.font.bold = True
+    p.font.color.rgb = accent_emerald
+
+    bullets2 = [
+      "100% Dynamic Synchronization with backend database file (`incidents.json`).",
+      "Total Database Incidents metric tracks 1,000+ persistent records.",
+      "Live Unassigned Queue countdown reflects real-time AI Router progress.",
+      "Real-time Active Incident Stream table with direct clickable links.",
+      "98.4%+ SLA target compliance monitoring across P1 & P2 tickets."
     ]
+    for b in bullets2:
+        pb = tf2.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
 
-    lefts = [0.8, 6.8, 0.8, 6.8]
-    tops = [1.6, 1.6, 4.3, 4.3]
-
-    for idx, (title, desc, accent) in enumerate(cards_s2):
-        add_card(slide2, lefts[idx], tops[idx], 5.7, 2.4)
-        tb_card = slide2.shapes.add_textbox(Inches(lefts[idx] + 0.3), Inches(tops[idx] + 0.3), Inches(5.1), Inches(1.8))
-        tf_card = tb_card.text_frame
-        tf_card.word_wrap = True
-        
-        p_ct = tf_card.paragraphs[0]
-        p_ct.text = title
-        p_ct.font.size = Pt(18)
-        p_ct.font.bold = True
-        p_ct.font.color.rgb = accent
-
-        p_cd = tf_card.add_paragraph()
-        p_cd.text = desc
-        p_cd.font.size = Pt(13)
-        p_cd.font.color.rgb = TEXT_MUTED
-
-    # ==================== SLIDE 3: ARCHITECTURE DIAGRAM ====================
+    # SLIDE 3: Agentic AI Ticket Router Terminal Logs
     slide3 = prs.slides.add_slide(blank_layout)
-    add_bg(slide3)
-    add_header(slide3, "End-to-End Multi-Agent System Architecture")
+    add_header(slide3, "2. Agentic AI Ticket Router (NVIDIA Nemotron 3 550B LLM)", "AUTONOMOUS ITIL TRIAGE ENGINE")
 
-    # Layer Cards
-    layers = [
-        ("CLIENT LAYER", "Next.js Frontend (Port 3000)  |  MCP Stdio Client (itsm-mcp-server)", 1.6, ACCENT_INDIGO),
-        ("ORCHESTRATION LAYER", "🤖 Continuous AI Ticket Router  |  🧠 Agentic Knowledge Synthesizer", 2.9, ACCENT_PURPLE),
-        ("BACKEND API LAYER", "NestJS REST API (Port 4000)  |  AuthModule  |  IncidentModule  |  KnowledgeModule", 4.2, ACCENT_EMERALD),
-        ("AI MODEL & DISK LAYER", "NVIDIA NIM API (Nemotron 3 550B & Llama 3.3 70B)  |  incidents.json & analyzed_incidents.json", 5.5, ACCENT_AMBER),
+    img_path_ai = "docs/screenshots/ai_router_terminal.png"
+    if os.path.exists(img_path_ai):
+        slide3.shapes.add_picture(img_path_ai, Inches(0.8), Inches(1.5), width=Inches(8.2))
+
+    card3 = slide3.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.5), Inches(3.3), Inches(5.3))
+    card3.fill.solid()
+    card3.fill.fore_color.rgb = card_bg
+    card3.line.color.rgb = brand_blue
+    tf3 = card3.text_frame
+    tf3.word_wrap = True
+
+    p = tf3.paragraphs[0]
+    p.text = "AI Router Features"
+    p.font.size = Pt(16)
+    p.font.bold = True
+    p.font.color.rgb = accent_amber
+
+    bullets3 = [
+      "Continuous Background Monitoring: Scans unassigned queue every 10 seconds.",
+      "NVIDIA Nemotron 3 550B LLM performs multi-factor diagnostic reasoning.",
+      "Strict ITIL Group Routing (Unix, Network Ops, App Support, SecOps, DBA).",
+      "High-Availability Rule Engine Fallback guarantees 96%+ routing uptime.",
+      "Automatic execution logs emitted directly in NestJS console."
     ]
+    for b in bullets3:
+        pb = tf3.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
 
-    for title, desc, top_y, accent in layers:
-        add_card(slide3, 0.8, top_y, 11.733, 1.1)
-        tb_l = slide3.shapes.add_textbox(Inches(1.1), Inches(top_y + 0.15), Inches(11.1), Inches(0.8))
-        tf_l = tb_l.text_frame
-        tf_l.word_wrap = True
-        
-        p_lt = tf_l.paragraphs[0]
-        p_lt.text = title
-        p_lt.font.size = Pt(14)
-        p_lt.font.bold = True
-        p_lt.font.color.rgb = accent
-
-        p_ld = tf_l.add_paragraph()
-        p_ld.text = desc
-        p_ld.font.size = Pt(12)
-        p_ld.font.color.rgb = TEXT_WHITE
-
-    # ==================== SLIDE 4: TICKET ROUTER ====================
+    # SLIDE 4: Incident Console & Triage Queue
     slide4 = prs.slides.add_slide(blank_layout)
-    add_bg(slide4)
-    add_header(slide4, "Autonomous AI Ticket Router (NVIDIA Nemotron 3 550B)")
+    add_header(slide4, "3. Incident Management Console & Triage Queue", "ITIL PROCESS EXECUTION")
 
-    add_card(slide4, 0.8, 1.6, 5.7, 5.1)
-    tb_r1 = slide4.shapes.add_textbox(Inches(1.1), Inches(1.8), Inches(5.1), Inches(4.7))
-    tf_r1 = tb_r1.text_frame
-    tf_r1.word_wrap = True
-    
-    p = tf_r1.paragraphs[0]
-    p.text = "Router Mechanics & Resilience"
-    p.font.size = Pt(18)
+    img_path_list = "docs/screenshots/incident_list.png"
+    if os.path.exists(img_path_list):
+        slide4.shapes.add_picture(img_path_list, Inches(0.8), Inches(1.4), width=Inches(8.2))
+
+    card4 = slide4.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.4), Inches(3.3), Inches(5.4))
+    card4.fill.solid()
+    card4.fill.fore_color.rgb = card_bg
+    card4.line.color.rgb = brand_blue
+    tf4 = card4.text_frame
+    tf4.word_wrap = True
+
+    p = tf4.paragraphs[0]
+    p.text = "Console Capabilities"
+    p.font.size = Pt(16)
     p.font.bold = True
-    p.font.color.rgb = ACCENT_INDIGO
+    p.font.color.rgb = brand_blue
 
-    r_bullets = [
-        "• Unassigned Queue Worker: Scans DB every 10,000ms for unassigned incident tickets.",
-        "• 100% LLM-Driven: Zero fallback to rule engine, ensuring true agentic reasoning.",
-        "• Sequential Pacing: Processes tickets one-by-one with 2.0s pauses to prevent rate limits.",
-        "• Backoff Retries: Exponential retry backoff (3s, 6s, 9s, 12s) handling HTTP 429/503 limits.",
-        "• Audit Logging: Extracts extended thinking traces into work notes and ai-router.log."
+    bullets4 = [
+      "1,000+ Record Database view powered by single source of truth.",
+      "Multi-field search filter by Ticket ID, Title, Group, or Assigned Tech.",
+      "Real-time counters for Unassigned Queue, Assigned & Resolved, and P1s.",
+      "ITIL Impact x Urgency matrix automatically calculates P1 - P4 priorities.",
+      "Direct integration with NestJS REST API (`GET /api/v1/incidents`)."
     ]
-    for b in r_bullets:
-        pb = tf_r1.add_paragraph()
-        pb.text = b
-        pb.font.size = Pt(12)
-        pb.font.color.rgb = TEXT_MUTED
+    for b in bullets4:
+        pb = tf4.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
 
-    add_card(slide4, 6.8, 1.6, 5.7, 5.1)
-    tb_r2 = slide4.shapes.add_textbox(Inches(7.1), Inches(1.8), Inches(5.1), Inches(4.7))
-    tf_r2 = tb_r2.text_frame
-    tf_r2.word_wrap = True
-    
-    p = tf_r2.paragraphs[0]
-    p.text = "Sample LLM Routing Payload"
-    p.font.size = Pt(18)
-    p.font.bold = True
-    p.font.color.rgb = ACCENT_EMERALD
-
-    json_sample = """{
-  "ticketId": "INC0000008",
-  "targetGroup": "Network Ops",
-  "assignedTechnician": "Alex Rivera (Network Lead)",
-  "confidenceScore": 95,
-  "routedBy": "NVIDIA_NEMOTRON_LLM",
-  "reasoningText": "Analyzed core router latency log. Matched Network Ops team lead for BGP flush.",
-  "recommendedResolutionCode": "Network - BGP & Interface Reset"
-}"""
-    pb = tf_r2.add_paragraph()
-    pb.text = json_sample
-    pb.font.size = Pt(11)
-    pb.font.bold = True
-    pb.font.color.rgb = TEXT_WHITE
-
-    # ==================== SLIDE 5: KNOWLEDGE BASE SYNTHESIZER ====================
+    # SLIDE 5: Incident Detail & Agentic AI Work Notes
     slide5 = prs.slides.add_slide(blank_layout)
-    add_bg(slide5)
-    add_header(slide5, "Agentic Knowledge Base Synthesizer (Meta Llama 3.3 70B)")
+    add_header(slide5, "4. Incident Detail & Agentic AI Work Notes Log", "DIAGNOSTIC WORKFLOW & AUDIT TRAIL")
 
-    add_card(slide5, 0.8, 1.6, 5.7, 5.1)
-    tb_k1 = slide5.shapes.add_textbox(Inches(1.1), Inches(1.8), Inches(5.1), Inches(4.7))
-    tf_k1 = tb_k1.text_frame
-    tf_k1.word_wrap = True
-    
-    p = tf_k1.paragraphs[0]
-    p.text = "Chunked Processing & Deduplication"
-    p.font.size = Pt(18)
+    img_path_det = "docs/screenshots/incident_detail.png"
+    if os.path.exists(img_path_det):
+        slide5.shapes.add_picture(img_path_det, Inches(0.8), Inches(1.4), width=Inches(8.2))
+
+    card5 = slide5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.4), Inches(3.3), Inches(5.4))
+    card5.fill.solid()
+    card5.fill.fore_color.rgb = card_bg
+    card5.line.color.rgb = brand_blue
+    tf5 = card5.text_frame
+    tf5.word_wrap = True
+
+    p = tf5.paragraphs[0]
+    p.text = "Activity Log Audit"
+    p.font.size = Pt(16)
     p.font.bold = True
-    p.font.color.rgb = ACCENT_PURPLE
+    p.font.color.rgb = accent_emerald
 
-    k_bullets = [
-        "• 10-Incident Chunking: Processes unanalyzed tickets in 10-ticket batches for optimal LLM context window use.",
-        "• Persistent Incident Tracking: Marks analyzed IDs in analyzed_incidents.json so no incident is ever re-analyzed.",
-        "• Continuous Background Worker: Runs continuously in NestJS background (onModuleInit).",
-        "• Semantic Token Deduplication: Overlap check (>50%) guarantees 100% unique problem solutions.",
-        "• SOP Synthesis: Converts raw diagnostic work notes into structured ITIL Knowledge Articles."
+    bullets5 = [
+      "Agentic AI Router posts internal Department Work Notes automatically.",
+      "Includes reasoning text, target group, assigned lead, and confidence score.",
+      "ITIL Close Codes (Kernel Patch, DB Vacuum, SSO Fix, BGP Reset).",
+      "SLA Target Metrics timer (Response SLA & Resolution SLA).",
+      "Persistent activity timeline preserved in database file."
     ]
-    for b in k_bullets:
-        pb = tf_k1.add_paragraph()
-        pb.text = b
-        pb.font.size = Pt(12)
-        pb.font.color.rgb = TEXT_MUTED
+    for b in bullets5:
+        pb = tf5.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
 
-    add_card(slide5, 6.8, 1.6, 5.7, 5.1)
-    tb_k2 = slide5.shapes.add_textbox(Inches(7.1), Inches(1.8), Inches(5.1), Inches(4.7))
-    tf_k2 = tb_k2.text_frame
-    tf_k2.word_wrap = True
-    
-    p = tf_k2.paragraphs[0]
-    p.text = "Synthesized SOP Article (KB0000001)"
-    p.font.size = Pt(18)
-    p.font.bold = True
-    p.font.color.rgb = ACCENT_AMBER
-
-    kb_sample = """Title: Troubleshooting & SOP: SAP ERP Financials SSO Auth Failure (mainframe-host-01)
-Category: Server - Kernel & OS Patch
-Author: 🤖 Meta Llama 3.3 70B Instruct
-Notes Analyzed: 64 Incidents
-
-Resolution Steps:
-1. Inspect configuration item telemetry status for mainframe-host-01.
-2. Apply kernel remediation patch & clear SSO driver lock.
-3. Validate metric health baseline and confirm ticket resolution."""
-
-    pb = tf_k2.add_paragraph()
-    pb.text = kb_sample
-    pb.font.size = Pt(11)
-    pb.font.color.rgb = TEXT_WHITE
-
-    # ==================== SLIDE 6: MCP SERVER & WEB UI ====================
+    # SLIDE 6: Knowledge Base & KEDB Synthesizer
     slide6 = prs.slides.add_slide(blank_layout)
-    add_bg(slide6)
-    add_header(slide6, "MCP Server Protocol & Modern Next.js Frontend")
+    add_header(slide6, "5. Continuous Knowledge Base (Meta Llama 3.3 70B)", "AUTONOMOUS KNOWLEDGE SYNTHESIS")
 
-    add_card(slide6, 0.8, 1.6, 5.7, 5.1)
-    tb_m1 = slide6.shapes.add_textbox(Inches(1.1), Inches(1.8), Inches(5.1), Inches(4.7))
-    tf_m1 = tb_m1.text_frame
-    tf_m1.word_wrap = True
-    
-    p = tf_m1.paragraphs[0]
-    p.text = "Model Context Protocol (MCP)"
-    p.font.size = Pt(18)
+    img_path_kb = "docs/screenshots/knowledge_base.png"
+    if os.path.exists(img_path_kb):
+        slide6.shapes.add_picture(img_path_kb, Inches(0.8), Inches(1.4), width=Inches(8.2))
+
+    card6 = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.4), Inches(3.3), Inches(5.4))
+    card6.fill.solid()
+    card6.fill.fore_color.rgb = card_bg
+    card6.line.color.rgb = brand_blue
+    tf6 = card6.text_frame
+    tf6.word_wrap = True
+
+    p = tf6.paragraphs[0]
+    p.text = "Knowledge Synthesizer"
+    p.font.size = Pt(16)
     p.font.bold = True
-    p.font.color.rgb = ACCENT_EMERALD
+    p.font.color.rgb = accent_amber
 
-    m_bullets = [
-        "• Transport: Stdio transport with Automatic Auth Flow.",
-        "• Tool: list_unassigned_incidents (Query triage queue)",
-        "• Tool: update_incident_group (Assign department & lead)",
-        "• Tool: generate_knowledge_from_work_notes (Trigger SOP synthesis)",
-        "• Tool: list_knowledge_articles (Retrieve published catalog)",
-        "• Tool: get_knowledge_article (Inspect detailed SOP by ID)"
+    bullets6 = [
+      "Continuous Background AI Worker running in NestJS backend.",
+      "Scans 1,000 incident diagnostic notes in 10-ticket batches.",
+      "Synthesizes Standard Operating Procedures (SOPs) & KEDB workarounds.",
+      "Meta Llama 3.3 70B Instruct LLM powers intelligent synthesis.",
+      "Live progress bar tracks 100% completion across 1,000 tickets."
     ]
-    for b in m_bullets:
-        pb = tf_m1.add_paragraph()
-        pb.text = b
-        pb.font.size = Pt(12)
-        pb.font.color.rgb = TEXT_MUTED
+    for b in bullets6:
+        pb = tf6.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
 
-    add_card(slide6, 6.8, 1.6, 5.7, 5.1)
-    tb_m2 = slide6.shapes.add_textbox(Inches(7.1), Inches(1.8), Inches(5.1), Inches(4.7))
-    tf_m2 = tb_m2.text_frame
-    tf_m2.word_wrap = True
-    
-    p = tf_m2.paragraphs[0]
-    p.text = "Next.js Web UI (http://localhost:3000/knowledge)"
-    p.font.size = Pt(18)
-    p.font.bold = True
-    p.font.color.rgb = ACCENT_INDIGO
+    # Save Presentation
+    output_pptx = "Enterprise_ITSM_Platform_Presentation.pptx"
+    prs.save(output_pptx)
+    print(f"PowerPoint presentation successfully saved to: {output_pptx}")
 
-    ui_bullets = [
-        "• Real-Time Progress Banner: Polling GET /api/v1/knowledge/status every 3s.",
-        "• Zero State Loss: Navigating between pages (/incidents -> /knowledge) preserves progress.",
-        "• Dynamic Controls: Trigger background worker across all 1,000 incidents.",
-        "• Interactive SOP Modal: Deep-dive view of symptoms, root cause, and remediation steps."
-    ]
-    for b in ui_bullets:
-        pb = tf_m2.add_paragraph()
-        pb.text = b
-        pb.font.size = Pt(12)
-        pb.font.color.rgb = TEXT_WHITE
-
-    # Output file
-    output_path = os.path.join(os.getcwd(), "Agentic_AI_ITSM_Platform.pptx")
-    prs.save(output_path)
-    print(f"SUCCESS: Created PowerPoint presentation at {output_path}")
-
-if __name__ == "__main__":
-    build_pptx()
+if __name__ == '__main__':
+    build_presentation()
