@@ -1,35 +1,74 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AlertTriangle,
   Clock,
   CheckCircle2,
   Server,
-  TrendingUp,
   Activity,
   ArrowUpRight,
   Plus,
   ShieldCheck,
   Zap,
+  RefreshCw,
 } from 'lucide-react';
 import Link from 'next/link';
 
-const stats = [
-  { name: 'Active Incidents', value: '42', change: '+3 today', changeType: 'increase', icon: AlertTriangle, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
-  { name: 'SLA Breach Risk', value: '3', change: '-2 resolved', changeType: 'decrease', icon: Clock, color: 'text-rose-400', bg: 'bg-rose-500/10 border-rose-500/20' },
-  { name: 'Pending Approvals', value: '8', change: '4 Change CAB', changeType: 'neutral', icon: CheckCircle2, color: 'text-brand-400', bg: 'bg-brand-500/10 border-brand-500/20' },
-  { name: 'CI Infrastructure Health', value: '99.94%', change: '1,420 CIs Tracked', changeType: 'increase', icon: Server, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
-];
-
-const recentIncidents = [
-  { id: 'INC0001042', title: 'Core Router NYC-01 High Latency', priority: 'P1 - CRITICAL', state: 'IN_PROGRESS', caller: 'Monitoring Bot', group: 'Network Ops', time: '12m ago' },
-  { id: 'INC0001041', title: 'SAP ERP Financials SSO Auth Failure', priority: 'P2 - HIGH', state: 'NEW', caller: 'Sarah Connor', group: 'App Support', time: '28m ago' },
-  { id: 'INC0001040', title: 'Printer Spooler Offline - London HQ', priority: 'P4 - LOW', state: 'IN_PROGRESS', caller: 'David Miller', group: 'Desktop Support', time: '1h ago' },
-  { id: 'INC0001039', title: 'AWS East Region DB Connection Timeout', priority: 'P2 - HIGH', state: 'ON_HOLD', caller: 'AWS CloudWatch', group: 'DevOps Ops', time: '2h ago' },
-];
-
 export default function DashboardPage() {
+  const [incidents, setIncidents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchDashboardData = async () => {
+    try {
+      const res = await fetch('/api/v1/incidents');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setIncidents(data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load dashboard incidents:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+    const interval = setInterval(fetchDashboardData, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Compute Real-Time Dynamic Metrics matching /incidents
+  const totalIncidents = incidents.length;
+  const unassignedCount = incidents.filter(
+    (i) => (i.department || '').includes('UNASSIGNED') || (i.assignedTo || '').includes('UNASSIGNED')
+  ).length;
+  const activeCount = incidents.filter(
+    (i) => i.state === 'NEW' || i.state === 'IN_PROGRESS' || i.state === 'ON_HOLD'
+  ).length;
+  const resolvedCount = incidents.filter(
+    (i) => i.state === 'RESOLVED' || i.state === 'CLOSED'
+  ).length;
+
+  const stats = [
+    { name: 'Total Database Incidents', value: totalIncidents.toLocaleString(), change: 'Disk JSON DB', changeType: 'neutral', icon: Server, color: 'text-indigo-400', bg: 'bg-indigo-500/10 border-indigo-500/20' },
+    { name: 'Unassigned Queue', value: unassignedCount.toLocaleString(), change: 'Pending AI Router', changeType: 'decrease', icon: Clock, color: 'text-rose-400', bg: 'bg-rose-500/10 border-rose-500/20' },
+    { name: 'Active Incidents', value: activeCount.toLocaleString(), change: 'In Triage & Progress', changeType: 'increase', icon: AlertTriangle, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
+    { name: 'Resolved & Closed', value: resolvedCount.toLocaleString(), change: 'Successfully Handled', changeType: 'increase', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+  ];
+
+  // Top recent incidents sorted descending
+  const recentIncidents = [...incidents]
+    .sort((a, b) => {
+      const numA = parseInt((a.id || a.number || '').replace(/\D/g, ''), 10) || 0;
+      const numB = parseInt((b.id || b.number || '').replace(/\D/g, ''), 10) || 0;
+      return numB - numA;
+    })
+    .slice(0, 6);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
@@ -42,6 +81,12 @@ export default function DashboardPage() {
           <p className="text-xs text-slate-400 mt-1">Real-time status of Incidents, SLAs, Changes, and Infrastructure Configuration Items.</p>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={fetchDashboardData}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 font-semibold text-xs transition"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-slate-400 ${loading ? 'animate-spin' : ''}`} />
+          </button>
           <Link
             href="/incidents"
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition shadow-lg shadow-brand-500/20"
@@ -83,12 +128,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
               <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-brand-400" /> Active Incident Stream
+                <Activity className="w-4 h-4 text-brand-400" /> Real-Time Live Incident Stream
               </h2>
-              <p className="text-xs text-slate-400">High impact IT service interruptions requiring immediate response.</p>
+              <p className="text-xs text-slate-400">Live stream synchronized with backend database file (`incidents.json`).</p>
             </div>
             <Link href="/incidents" className="text-xs font-semibold text-brand-400 hover:text-brand-300 flex items-center gap-1">
-              View All <ArrowUpRight className="w-3.5 h-3.5" />
+              View All ({totalIncidents}) <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -100,27 +145,31 @@ export default function DashboardPage() {
                   <th className="py-3 px-3">Short Description</th>
                   <th className="py-3 px-3">Priority</th>
                   <th className="py-3 px-3">State</th>
-                  <th className="py-3 px-3">Group</th>
+                  <th className="py-3 px-3">Department</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 font-sans">
                 {recentIncidents.map((inc) => (
-                  <tr key={inc.id} className="hover:bg-slate-800/40 transition">
-                    <td className="py-3 px-3 font-mono font-bold text-brand-400">{inc.id}</td>
-                    <td className="py-3 px-3 font-medium text-slate-200">{inc.title}</td>
+                  <tr key={inc.id || inc.number} className="hover:bg-slate-800/40 transition">
+                    <td className="py-3 px-3 font-mono font-bold text-brand-400">
+                      <Link href={`/incidents/${inc.id || inc.number}`} className="hover:underline">
+                        {inc.id || inc.number}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-3 font-medium text-slate-200">{inc.shortDescription || inc.title}</td>
                     <td className="py-3 px-3">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        inc.priority.startsWith('P1')
+                        (inc.priority || '').includes('P1')
                           ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                          : inc.priority.startsWith('P2')
+                          : (inc.priority || '').includes('P2')
                           ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                           : 'bg-slate-800 text-slate-300'
                       }`}>
-                        {inc.priority}
+                        {inc.priority || 'P4'}
                       </span>
                     </td>
                     <td className="py-3 px-3 font-semibold text-slate-300">{inc.state}</td>
-                    <td className="py-3 px-3 text-slate-400">{inc.group}</td>
+                    <td className="py-3 px-3 text-slate-400">{inc.department || 'UNASSIGNED (No Team)'}</td>
                   </tr>
                 ))}
               </tbody>
