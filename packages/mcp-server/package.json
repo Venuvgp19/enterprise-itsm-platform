@@ -1,0 +1,22 @@
+{
+  "name": "@itsm/mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) Server for Enterprise ITSM Incident Auto-Routing Agent",
+  "main": "dist/index.js",
+  "bin": {
+    "itsm-mcp-server": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

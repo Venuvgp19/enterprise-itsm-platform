@@ -1,0 +1,28 @@
+{
+  "name": "enterprise-itsm-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modern Enterprise IT Service Management Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm --prefix apps/backend run start:dev",
+    "dev:frontend": "npm --prefix apps/frontend run dev",
+    "build:db": "npm --prefix packages/db run build",
+    "build:backend": "npm --prefix apps/backend run build",
+    "build:frontend": "npm --prefix apps/frontend run build",
+    "build:mcp": "npm --prefix packages/mcp-server run build",
+    "start:mcp": "npm --prefix packages/mcp-server run start",
+    "db:generate": "npm --prefix packages/db run generate",
+    "db:migrate": "npm --prefix packages/db run migrate",
+    "test": "npm --prefix apps/backend run test",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "prettier": "^3.2.5"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "itsm-agentic-router": {
+      "command": "node",
+      "args": [
+        "packages/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "ITSM_BACKEND_URL": "http://localhost:4000"
+      }
+    }
+  }
+}

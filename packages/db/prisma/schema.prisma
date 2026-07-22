@@ -1,0 +1,634 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Priority {
+  CRITICAL
+  HIGH
+  MODERATE
+  LOW
+  PLANNING
+}
+
+enum Urgency {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum Impact {
+  ENTERPRISE
+  DEPARTMENT
+  TEAM
+  INDIVIDUAL
+}
+
+enum IncidentState {
+  NEW
+  IN_PROGRESS
+  ON_HOLD
+  RESOLVED
+  CLOSED
+  CANCELLED
+}
+
+enum ChangeType {
+  STANDARD
+  NORMAL
+  EMERGENCY
+}
+
+enum ChangeState {
+  DRAFT
+  ASSESS
+  AUTHORIZE
+  SCHEDULED
+  IMPLEMENTATION
+  REVIEW
+  CLOSED
+  CANCELLED
+}
+
+enum ApprovalState {
+  NOT_REQUESTED
+  REQUESTED
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum TaskState {
+  OPEN
+  IN_PROGRESS
+  PENDING
+  COMPLETE
+  CLOSED_INCOMPLETE
+}
+
+enum AssetStatus {
+  IN_STOCK
+  IN_USE
+  MAINTENANCE
+  RETIRED
+  DISPOSED
+}
+
+enum CIStatus {
+  OPERATIONAL
+  NON_OPERATIONAL
+  MAINTENANCE
+  RETIRED
+}
+
+enum WorkflowStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model Tenant {
+  id          String   @id @default(uuid())
+  name        String
+  domain      String   @unique
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users             User[]
+  companies         Company[]
+  departments       Department[]
+  locations         Location[]
+  costCenters       CostCenter[]
+  incidents         Incident[]
+  problems          Problem[]
+  changes           ChangeRequest[]
+  catalogItems      ServiceCatalogItem[]
+  requests          ServiceRequest[]
+  knowledgeArticles KnowledgeArticle[]
+  configurationItems ConfigurationItem[]
+  assets            Asset[]
+  workflows         WorkflowDefinition[]
+  businessRules     BusinessRule[]
+  slaDefinitions    SlaDefinition[]
+}
+
+model User {
+  id            String   @id @default(uuid())
+  tenantId      String
+  email         String   @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  title         String?
+  phone         String?
+  avatarUrl     String?
+  isActive      Boolean  @default(true)
+  mfaEnabled    Boolean  @default(false)
+  mfaSecret     String?
+  lastLoginAt   DateTime?
+  companyId     String?
+  departmentId  String?
+  locationId    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company       Company?     @relation(fields: [companyId], references: [id])
+  department    Department?  @relation(fields: [departmentId], references: [id])
+  location      Location?    @relation(fields: [locationId], references: [id])
+  
+  userRoles     UserRole[]
+  userGroups    UserGroup[]
+  assignedIncidents Incident[] @relation("AssignedIncidents")
+  reportedIncidents Incident[] @relation("ReportedIncidents")
+  assignedChanges   ChangeRequest[] @relation("AssignedChanges")
+  requestedChanges  ChangeRequest[] @relation("RequestedChanges")
+  requestedServices ServiceRequest[] @relation("RequestedServices")
+  assignedTasks     Task[] @relation("AssignedTasks")
+  approvalsGiven    ApprovalRecord[]
+  auditLogs         AuditLog[]
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  resource    String
+  action      String
+  description String?
+  createdAt   DateTime @default(now())
+
+  rolePermissions RolePermission[]
+
+  @@unique([resource, action])
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Group {
+  id          String   @id @default(uuid())
+  tenantId    String
+  name        String
+  description String?
+  email       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userGroups  UserGroup[]
+  incidentAssignmentGroups Incident[] @relation("AssignmentGroups")
+  changeAssignmentGroups   ChangeRequest[] @relation("ChangeAssignmentGroups")
+}
+
+model UserGroup {
+  userId  String
+  groupId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  code      String?
+  website   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  users       User[]
+  departments Department[]
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  tenantId  String
+  companyId String
+  name      String
+  code      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  users     User[]
+}
+
+model Location {
+  id         String   @id @default(uuid())
+  tenantId   String
+  name       String
+  city       String?
+  country    String?
+  postalCode String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  users  User[]
+}
+
+model CostCenter {
+  id        String   @id @default(uuid())
+  tenantId  String
+  code      String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model ConfigurationItem {
+  id           String     @id @default(uuid())
+  tenantId     String
+  name         String
+  ciClass      String
+  status       CIStatus   @default(OPERATIONAL)
+  serialNumber String?
+  ipAddress    String?
+  macAddress   String?
+  location     String?
+  environment  String?
+  attributesJson Json?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  parentRelations    CIRelationship[]    @relation("ParentCI")
+  childRelations     CIRelationship[]    @relation("ChildCI")
+  incidents          Incident[]
+  changes            ChangeRequest[]
+}
+
+model CIRelationship {
+  id           String   @id @default(uuid())
+  parentCiId   String
+  childCiId    String
+  relationType String
+  createdAt    DateTime @default(now())
+
+  parentCi ConfigurationItem @relation("ParentCI", fields: [parentCiId], references: [id], onDelete: Cascade)
+  childCi  ConfigurationItem @relation("ChildCI", fields: [childCiId], references: [id], onDelete: Cascade)
+}
+
+model Asset {
+  id           String      @id @default(uuid())
+  tenantId     String
+  assetTag     String      @unique
+  name         String
+  category     String
+  modelNumber  String?
+  serialNumber String?
+  status       AssetStatus @default(IN_USE)
+  purchaseDate DateTime?
+  cost         Float?
+  vendorName   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model Incident {
+  id                 String        @id @default(uuid())
+  tenantId           String
+  number             String        @unique
+  shortDescription   String
+  description        String
+  state              IncidentState @default(NEW)
+  impact             Impact        @default(TEAM)
+  urgency            Urgency       @default(MEDIUM)
+  priority           Priority      @default(MODERATE)
+  callerId           String
+  assignedToId       String?
+  assignmentGroupId  String?
+  configurationItemId String?
+  resolvedAt         DateTime?
+  closedAt           DateTime?
+  resolutionNotes    String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  tenant             Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  caller             User               @relation("ReportedIncidents", fields: [callerId], references: [id])
+  assignedTo         User?              @relation("AssignedIncidents", fields: [assignedToId], references: [id])
+  assignmentGroup    Group?             @relation("AssignmentGroups", fields: [assignmentGroupId], references: [id])
+  configurationItem  ConfigurationItem? @relation(fields: [configurationItemId], references: [id])
+  activities         IncidentActivity[]
+  slaExecutions      SlaExecution[]
+  tasks              Task[]
+}
+
+model IncidentActivity {
+  id         String   @id @default(uuid())
+  incidentId String
+  authorId   String
+  isWorkNote Boolean  @default(false)
+  comment    String
+  createdAt  DateTime @default(now())
+
+  incident Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+}
+
+model Problem {
+  id               String   @id @default(uuid())
+  tenantId         String
+  number           String   @unique
+  shortDescription String
+  description      String
+  rootCause        String?
+  workaround       String?
+  knownError       Boolean  @default(false)
+  state            String   @default("NEW")
+  priority         Priority @default(MODERATE)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model ChangeRequest {
+  id                 String        @id @default(uuid())
+  tenantId           String
+  number             String        @unique
+  title              String
+  description        String
+  changeType         ChangeType    @default(NORMAL)
+  state              ChangeState   @default(DRAFT)
+  approvalState      ApprovalState @default(NOT_REQUESTED)
+  riskScore          Int           @default(1)
+  impact             Impact        @default(TEAM)
+  requestedById      String
+  assignedToId       String?
+  assignmentGroupId  String?
+  configurationItemId String?
+  plannedStartDate   DateTime?
+  plannedEndDate     DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  tenant            Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  requestedBy       User               @relation("RequestedChanges", fields: [requestedById], references: [id])
+  assignedTo        User?              @relation("AssignedChanges", fields: [assignedToId], references: [id])
+  assignmentGroup   Group?             @relation("ChangeAssignmentGroups", fields: [assignmentGroupId], references: [id])
+  configurationItem ConfigurationItem? @relation(fields: [configurationItemId], references: [id])
+  approvals         ApprovalRecord[]
+}
+
+model ServiceCatalogCategory {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
+
+  catalogItems ServiceCatalogItem[]
+}
+
+model ServiceCatalogItem {
+  id          String   @id @default(uuid())
+  tenantId    String
+  categoryId  String
+  name        String
+  shortDesc   String
+  description String
+  price       Float    @default(0.0)
+  formSchemaJson Json
+  workflowId  String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant   Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category ServiceCatalogCategory @relation(fields: [categoryId], references: [id])
+  requests ServiceRequest[]
+}
+
+model ServiceRequest {
+  id            String        @id @default(uuid())
+  tenantId      String
+  number        String        @unique
+  catalogItemId String
+  requestedById String
+  state         TaskState     @default(OPEN)
+  approvalState ApprovalState @default(NOT_REQUESTED)
+  formDataJson  Json
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  tenant      Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  catalogItem ServiceCatalogItem @relation(fields: [catalogItemId], references: [id])
+  requestedBy User               @relation("RequestedServices", fields: [requestedById], references: [id])
+  tasks       Task[]
+}
+
+model KnowledgeArticle {
+  id          String   @id @default(uuid())
+  tenantId    String
+  number      String   @unique
+  title       String
+  content     String
+  category    String
+  authorId    String
+  viewsCount  Int      @default(0)
+  rating      Float    @default(5.0)
+  isPublished Boolean  @default(false)
+  version     Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model WorkflowDefinition {
+  id          String         @id @default(uuid())
+  tenantId    String
+  name        String
+  description String?
+  triggerType String         @default("EVENT")
+  status      WorkflowStatus @default(ACTIVE)
+  nodesJson   Json
+  edgesJson   Json
+  version     Int            @default(1)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  executions WorkflowExecution[]
+}
+
+model WorkflowExecution {
+  id           String          @id @default(uuid())
+  workflowId   String
+  status       ExecutionStatus @default(PENDING)
+  contextJson  Json
+  startedAt    DateTime        @default(now())
+  completedAt  DateTime?
+
+  workflow WorkflowDefinition @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model BusinessRule {
+  id            String   @id @default(uuid())
+  tenantId      String
+  name          String
+  targetTable   String
+  whenTrigger   String   @default("BEFORE_INSERT")
+  conditionJson Json
+  script        String
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model SlaDefinition {
+  id             String   @id @default(uuid())
+  tenantId       String
+  name           String
+  targetTable    String   @default("Incident")
+  targetDuration Int
+  conditionJson  Json
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  executions SlaExecution[]
+}
+
+model SlaExecution {
+  id              String        @id @default(uuid())
+  slaDefinitionId String
+  incidentId      String
+  startTime       DateTime      @default(now())
+  targetTime      DateTime
+  hasBreached     Boolean       @default(false)
+  status          String        @default("RUNNING")
+
+  slaDefinition SlaDefinition @relation(fields: [slaDefinitionId], references: [id], onDelete: Cascade)
+  incident      Incident      @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  number      String    @unique
+  title       String
+  description String?
+  state       TaskState @default(OPEN)
+  assignedToId String?
+  incidentId  String?
+  serviceRequestId String?
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  assignedTo     User?           @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  incident       Incident?       @relation(fields: [incidentId], references: [id])
+  serviceRequest ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+}
+
+model ApprovalRecord {
+  id              String        @id @default(uuid())
+  approverId      String
+  changeRequestId String?
+  status          ApprovalState @default(REQUESTED)
+  comments        String?
+  decidedAt       DateTime?
+  createdAt       DateTime      @default(now())
+
+  approver      User           @relation(fields: [approverId], references: [id])
+  changeRequest ChangeRequest? @relation(fields: [changeRequestId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  channel   String   @default("IN_APP")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Attachment {
+  id         String   @id @default(uuid())
+  fileName   String
+  fileSize   Int
+  mimeType   String
+  s3Url      String
+  recordId   String
+  recordType String
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  resource  String
+  recordId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model ApiKey {
+  id        String    @id @default(uuid())
+  name      String
+  keyHash   String    @unique
+  expiresAt DateTime?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+}

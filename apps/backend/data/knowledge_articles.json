@@ -1,0 +1,396 @@
+[
+  {
+    "id": "KB0000011",
+    "number": "KB0000011",
+    "title": "Troubleshooting & SOP: Unix Kernel Panic on Mainframe Host 01",
+    "category": "Application - Code & SSO Fix",
+    "configurationItem": "mainframe-host-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving Unix Kernel Panic on Mainframe Host 01 (#131) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for Unix Kernel Panic on Mainframe Host 01 (#131)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for Unix Kernel Panic on Mainframe Host 01 (#131).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 16,
+    "sourceIncidentIds": [
+      "INC0000131",
+      "INC0000132",
+      "INC0000133",
+      "INC0000134",
+      "INC0000135",
+      "INC0000136",
+      "INC0000137",
+      "INC0000138",
+      "INC0000139",
+      "INC0000140"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:26:05.887Z"
+  },
+  {
+    "id": "KB0000010",
+    "number": "KB0000010",
+    "title": "SOP for Resolving Core Router High Latency in NYC Datacenter (#121) - mainframe-host-01",
+    "category": "Server - Kernel & OS Patch",
+    "configurationItem": "mainframe-host-01",
+    "summary": "The Core Router High Latency issue in the NYC Datacenter (#121) is causing network connectivity problems, including high latency and potential timeouts. The root cause is related to network connectivity issues, specifically with the border router (router-border-nyc-01) and its peering with AWS East Region. To resolve the issue, Network Ops needs to investigate router logs, BGP peering, and path latency to isolate and fix the problem.",
+    "symptoms": [
+      "High latency in network traffic passing through the core router in NYC Datacenter",
+      "Potential timeouts and connection issues with AWS East Region services"
+    ],
+    "rootCause": "The root cause of the issue is likely related to network connectivity problems between the border router (router-border-nyc-01) and AWS East Region, potentially due to misconfigured BGP peering, incorrect routing tables, or high latency in the network path.",
+    "resolutionSteps": [
+      "Investigate router logs and BGP peering configurations to identify potential issues with the border router (router-border-nyc-01) and its connectivity to AWS East Region",
+      "Analyze network path latency and routing tables to determine if there are any misconfigurations or bottlenecks causing high latency",
+      "Collaborate with Network Ops team to implement fixes, such as updating BGP peering configurations, optimizing routing tables, or implementing Quality of Service (QoS) policies to prioritize critical traffic"
+    ],
+    "workNotesAnalyzedCount": 13,
+    "sourceIncidentIds": [
+      "INC0000121",
+      "INC0000122",
+      "INC0000123",
+      "INC0000124",
+      "INC0000125",
+      "INC0000126",
+      "INC0000127",
+      "INC0000128",
+      "INC0000129",
+      "INC0000130"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:21:02.133Z"
+  },
+  {
+    "id": "KB0000009",
+    "number": "KB0000009",
+    "title": "Troubleshooting & SOP: AWS East Region DB Connection Timeout",
+    "category": "Application - Code & SSO Fix",
+    "configurationItem": "mainframe-host-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving AWS East Region DB Connection Timeout (#91) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for AWS East Region DB Connection Timeout (#91)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for AWS East Region DB Connection Timeout (#91).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 16,
+    "sourceIncidentIds": [
+      "INC0000091",
+      "INC0000092",
+      "INC0000093",
+      "INC0000094",
+      "INC0000095",
+      "INC0000096",
+      "INC0000097",
+      "INC0000098",
+      "INC0000099",
+      "INC0000100"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:18:20.110Z"
+  },
+  {
+    "id": "KB0000008",
+    "number": "KB0000008",
+    "title": "Troubleshooting & SOP: VPN Gateway Certificate Expiration Alert",
+    "category": "Server - Kernel & OS Patch",
+    "configurationItem": "postgres-prod-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving VPN Gateway Certificate Expiration Alert (#81) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for VPN Gateway Certificate Expiration Alert (#81)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for VPN Gateway Certificate Expiration Alert (#81).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 14,
+    "sourceIncidentIds": [
+      "INC0000081",
+      "INC0000082",
+      "INC0000083",
+      "INC0000084",
+      "INC0000085",
+      "INC0000086",
+      "INC0000087",
+      "INC0000088",
+      "INC0000089",
+      "INC0000090"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:15:40.935Z"
+  },
+  {
+    "id": "KB0000007",
+    "number": "KB0000007",
+    "title": "Troubleshooting & SOP: Kubernetes Ingress Controller High CPU Spikes",
+    "category": "User Error - Training Provided",
+    "configurationItem": "mainframe-host-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving Kubernetes Ingress Controller High CPU Spikes (#71) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for Kubernetes Ingress Controller High CPU Spikes (#71)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for Kubernetes Ingress Controller High CPU Spikes (#71).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 16,
+    "sourceIncidentIds": [
+      "INC0000071",
+      "INC0000072",
+      "INC0000073",
+      "INC0000074",
+      "INC0000075",
+      "INC0000076",
+      "INC0000077",
+      "INC0000078",
+      "INC0000079",
+      "INC0000080"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:10:37.322Z"
+  },
+  {
+    "id": "KB0000006",
+    "number": "KB0000006",
+    "title": "Troubleshooting & SOP: PostgreSQL Primary Node Replication Lag",
+    "category": "Network - BGP & Interface Reset",
+    "configurationItem": "mainframe-host-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving PostgreSQL Primary Node Replication Lag (#61) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for PostgreSQL Primary Node Replication Lag (#61)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for PostgreSQL Primary Node Replication Lag (#61).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 14,
+    "sourceIncidentIds": [
+      "INC0000061",
+      "INC0000062",
+      "INC0000063",
+      "INC0000064",
+      "INC0000065",
+      "INC0000066",
+      "INC0000067",
+      "INC0000068",
+      "INC0000069",
+      "INC0000070"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:10:35.698Z"
+  },
+  {
+    "id": "KB0000005",
+    "number": "KB0000005",
+    "title": "Troubleshooting & SOP: Email Gateway Outbound Mail Queue Backlog",
+    "category": "Application - Code & SSO Fix",
+    "configurationItem": "postgres-prod-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving Email Gateway Outbound Mail Queue Backlog (#51) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for Email Gateway Outbound Mail Queue Backlog (#51)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for Email Gateway Outbound Mail Queue Backlog (#51).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 14,
+    "sourceIncidentIds": [
+      "INC0000051",
+      "INC0000052",
+      "INC0000053",
+      "INC0000054",
+      "INC0000055",
+      "INC0000056",
+      "INC0000057",
+      "INC0000058",
+      "INC0000059",
+      "INC0000060"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:05:31.909Z"
+  },
+  {
+    "id": "KB0000004",
+    "number": "KB0000004",
+    "title": "Troubleshooting & SOP: Active Directory LDAP Sync Failure",
+    "category": "Server - Kernel & OS Patch",
+    "configurationItem": "mainframe-host-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving Active Directory LDAP Sync Failure (#41) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for Active Directory LDAP Sync Failure (#41)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for Active Directory LDAP Sync Failure (#41).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 13,
+    "sourceIncidentIds": [
+      "INC0000041",
+      "INC0000042",
+      "INC0000043",
+      "INC0000044",
+      "INC0000045",
+      "INC0000046",
+      "INC0000047",
+      "INC0000048",
+      "INC0000049",
+      "INC0000050"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T16:00:28.298Z"
+  },
+  {
+    "id": "KB0000003",
+    "number": "KB0000003",
+    "title": "Troubleshooting & SOP: Okta MFA Webhook Delivery Timeout",
+    "category": "User Error - Training Provided",
+    "configurationItem": "mainframe-host-01",
+    "summary": "Standard Operating Procedure for diagnosing and resolving Okta MFA Webhook Delivery Timeout (#31) across enterprise infrastructure.",
+    "symptoms": [
+      "Telemetry alert triggered for Okta MFA Webhook Delivery Timeout (#31)",
+      "Intermittent latency and error spikes in diagnostic logs."
+    ],
+    "rootCause": "Root cause identified in diagnostic work notes: System resource contention or configuration drift.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status for Okta MFA Webhook Delivery Timeout (#31).",
+      "2. Apply remediation protocol: Reset service daemon, clear buffer queues, or deploy patch.",
+      "3. Validate operational metric health baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 16,
+    "sourceIncidentIds": [
+      "INC0000031",
+      "INC0000032",
+      "INC0000033",
+      "INC0000034",
+      "INC0000035",
+      "INC0000036",
+      "INC0000037",
+      "INC0000038",
+      "INC0000039",
+      "INC0000040"
+    ],
+    "author": "🤖 Meta Llama 3.3 70B Instruct (NVIDIA NIM)",
+    "modelUsed": "meta/llama-3.3-70b-instruct",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T15:55:24.663Z"
+  },
+  {
+    "id": "KB0000002",
+    "number": "KB0000002",
+    "title": "Troubleshooting & SOP: Printer Spooler Offline - London HQ Floor 3 (router-border-nyc-01)",
+    "category": "DB - Connection Pool & Vacuum",
+    "configurationItem": "router-border-nyc-01",
+    "summary": "The incident involves synthesizing a KB article for a printer spooler issue resolved via database connection pool tuning and vacuum operations (Resolution Code: DB - Connection Pool & Vacuum). Despite the CI referencing a border router, the explicit database resolution code and analysis of 64 incidents indicate the root cause resides in the database layer, requiring DBA expertise for knowledge capture.",
+    "symptoms": [
+      "Printer Spooler Offline - London HQ Floor 3 (#2) alerts triggered on router-border-nyc-01",
+      "System latency and intermittent connection timeouts reported in diagnostic logs."
+    ],
+    "rootCause": "The incident involves synthesizing a KB article for a printer spooler issue resolved via database connection pool tuning and vacuum operations (Resolution Code: DB - Connection Pool & Vacuum). Despite the CI referencing a border router, the explicit database resolution code and analysis of 64 incidents indicate the root cause resides in the database layer, requiring DBA expertise for knowledge capture.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status on router-border-nyc-01 using diagnostic CLI commands.",
+      "2. Apply recommended fix: KB synthesis task: Document printer spooler offline symptom (London HQ Floor 3) linked to DB connection pool exhaustion and vacuum maintenance. Root cause: PostgreSQL connection pool saturation during peak print jobs; resolved via pgbouncer config tuning and scheduled vacuum analyze. Attach query plans and pool metrics from incidents KB0000001-KB0000064.",
+      "3. Verify service health metric baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 64,
+    "sourceIncidentIds": [
+      "INC0000002",
+      "INC0000010",
+      "INC0000026",
+      "INC0000034",
+      "INC0000050",
+      "INC0000058",
+      "INC0000074",
+      "INC0000082",
+      "INC0000098",
+      "INC0000106"
+    ],
+    "author": "🤖 Agentic AI Knowledge Synthesizer (NVIDIA Nemotron 3 550B)",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T15:33:56.971Z"
+  },
+  {
+    "id": "KB0000001",
+    "number": "KB0000001",
+    "title": "Troubleshooting & SOP: SAP ERP Financials SSO Auth Failure (mainframe-host-01)",
+    "category": "Server - Kernel & OS Patch",
+    "configurationItem": "mainframe-host-01",
+    "summary": "The CI 'mainframe-host-01' is explicitly categorized as a Server requiring Kernel & OS Patch management. Incident INC0000065 directly reports a 'Unix Kernel Panic on Mainframe Host 01', confirming the OS/kernel layer issue. Unix team owns mainframe host OS lifecycle, kernel stability, and patch deployment.",
+    "symptoms": [
+      "SAP ERP Financials SSO Auth Failure (#1) alerts triggered on mainframe-host-01",
+      "System latency and intermittent connection timeouts reported in diagnostic logs."
+    ],
+    "rootCause": "The CI 'mainframe-host-01' is explicitly categorized as a Server requiring Kernel & OS Patch management. Incident INC0000065 directly reports a 'Unix Kernel Panic on Mainframe Host 01', confirming the OS/kernel layer issue. Unix team owns mainframe host OS lifecycle, kernel stability, and patch deployment.",
+    "resolutionSteps": [
+      "1. Inspect configuration item status on mainframe-host-01 using diagnostic CLI commands.",
+      "2. Apply recommended fix: KB synthesis triggered for mainframe-host-01 kernel/OS patch cycle. Review INC0000065 kernel panic root cause (likely patch gap or driver conflict). Validate current patch level against vendor baseline. Schedule maintenance window for remediation patch deployment. Cross-reference INC000049 (K8s CPU spikes) for potential host resource contention correlation.",
+      "3. Verify service health metric baseline and confirm ticket resolution."
+    ],
+    "workNotesAnalyzedCount": 64,
+    "sourceIncidentIds": [
+      "INC0000001",
+      "INC0000017",
+      "INC0000025",
+      "INC0000041",
+      "INC0000049",
+      "INC0000065",
+      "INC0000073",
+      "INC0000089",
+      "INC0000097",
+      "INC0000113"
+    ],
+    "author": "🤖 Agentic AI Knowledge Synthesizer (NVIDIA Nemotron 3 550B)",
+    "viewCount": 1,
+    "helpfulCount": 0,
+    "createdAt": "2026-07-22T15:31:10.928Z"
+  }
+]

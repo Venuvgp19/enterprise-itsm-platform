@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: itsm-backend
+  labels:
+    app: itsm-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: itsm-backend
+  template:
+    metadata:
+      labels:
+        app: itsm-backend
+    spec:
+      containers:
+      - name: backend
+        image: registry.enterprise.com/itsm/backend:1.0.0
+        ports:
+        - containerPort: 4000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: itsm-secrets
+              key: database-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: itsm-secrets
+              key: jwt-secret
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: itsm-backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: itsm-backend
+  ports:
+  - port: 4000
+    targetPort: 4000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: itsm-frontend
+  labels:
+    app: itsm-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: itsm-frontend
+  template:
+    metadata:
+      labels:
+        app: itsm-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: registry.enterprise.com/itsm/frontend:1.0.0
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: itsm-frontend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: itsm-frontend
+  ports:
+  - port: 80
+    targetPort: 3000
