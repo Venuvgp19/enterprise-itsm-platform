@@ -3,6 +3,19 @@
 
 ---
 
+## 🏗️ System Architecture & Token Calculation Engine
+
+![System Architecture Diagram](docs/screenshots/architecture_diagram.png)
+
+### 📊 Token Calculation Breakdown Per Incident
+
+| AI LLM Engine | Primary Module | Input Token Estimate / Unit | Output Token Estimate / Unit | Total Tokens / Unit | Total for 1,000 Incidents |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **NVIDIA Nemotron 3 550B** | **Agentic AI Ticket Router** | **~850 tokens** *(System prompt, ITIL guidelines, CI, Priority, Activity notes)* | **~350 tokens** *(Chain-of-thought, Target group, Work note)* | **~1,200 tokens / incident** | **~1,200,000 Tokens (1.2M)** |
+| **Meta Llama 3.3 70B** | **Continuous Knowledge Base Synthesizer** | **~4,500 tokens** *(10-ticket diagnostic batch prompt)* | **~1,500 tokens** *(Structured SOP & KEDB article)* | **~6,000 tokens / 10-ticket batch** *(~600 tokens / incident)* | **~600,000 Tokens (600K)** |
+
+---
+
 ## 📸 Real Application Screenshots & Terminal Logs
 
 ### 1. 📊 Live Dashboard & Ops Command Center
