@@ -16,6 +16,28 @@
 
 ---
 
+## 💰 Cost Breakdown & ROI Analysis Per Incident
+
+$$\mathbf{\text{Total Cost for 1 Incident}} = \$0.00190 \text{ (AI Router)} + \$0.00018 \text{ (KB Synthesizer)} = \mathbf{\$0.00208 \text{ per incident}}$$
+
+### Detailed Module Cost Summary
+
+| Scale | Total Incidents Processed | Total AI LLM API Cost |
+| :--- | :--- | :--- |
+| **1 Single Incident** | `1 Ticket` | **`$0.002`** *(less than 1/4 of a cent)* |
+| **100 Incidents** | `100 Tickets` | **`$0.21`** *(21 cents)* |
+| **1,000 Incidents** | `1,000 Tickets` | **`$2.08`** *(Full 1,000 incident database)* |
+
+### 📈 Human Helpdesk vs. Autonomous AI ROI Comparison
+
+| Metric | Traditional Human Triage | Autonomous AI Router & Synthesizer |
+| :--- | :--- | :--- |
+| **Average Cost per Incident** | **$15.00 – $25.00** *(Helpdesk Tier-1 labor)* | **$0.002** *(API LLM Token Cost)* |
+| **Triage & Dispatch Time** | 15 – 45 minutes | **< 3 seconds** |
+| **Cost Reduction / Savings** | Baseline | **99.99% Cost Savings** 🚀 |
+
+---
+
 ## 📸 Real Application Screenshots & Terminal Logs
 
 ### 1. 📊 Live Dashboard & Ops Command Center

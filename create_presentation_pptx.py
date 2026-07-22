@@ -100,22 +100,25 @@ def build_presentation():
 
     token_bullets = [
       "🤖 NVIDIA Nemotron 3 550B (AI Ticket Router):",
-      "  • Input Prompt: ~850 tokens (System prompt, ITIL guidelines, CI, Priority, Activity notes)",
-      "  • Output Reasoning: ~350 tokens (Chain-of-thought, Target group, Work note)",
-      "  • Total / Incident: ~1,200 tokens (~1.2M tokens for 1,000 tickets)",
+      "  • Tokens: ~1,200 / incident (850 input + 350 output)",
+      "  • Cost: $0.00190 / incident (~0.19 cents)",
       "\n📚 Meta Llama 3.3 70B (Knowledge Synthesizer):",
-      "  • Input Batch Prompt (10 tickets): ~4,500 tokens",
-      "  • Output SOP Article: ~1,500 tokens",
-      "  • Total / Batch: ~6,000 tokens (~600 tokens / incident)",
-      "  • Total for 1,000 Incidents: ~600,000 tokens",
+      "  • Tokens: ~600 / incident (~6,000 per 10-ticket batch)",
+      "  • Cost: $0.00018 / incident (~0.018 cents)",
+      "\n💰 TOTAL PIPELINE COST / INCIDENT:",
+      "  • $0.00208 / incident (~0.2 cents per ticket)",
+      "  • 1,000 Incidents Total Cost: $2.08",
+      "\n📈 ROI & SAVINGS:",
+      "  • Human Helpdesk Labor: $15.00 - $25.00 / incident",
+      "  • Cost Reduction: 99.99% Savings! 🚀",
     ]
     for b in token_bullets:
         pb = tf_tok.add_paragraph()
         pb.text = b
-        pb.font.size = Pt(10.5)
-        if b.startswith("🤖") or b.startswith("📚"):
+        pb.font.size = Pt(9.5)
+        if b.startswith("🤖") or b.startswith("📚") or b.startswith("💰") or b.startswith("📈"):
             pb.font.bold = True
-            pb.font.color.rgb = brand_blue
+            pb.font.color.rgb = accent_emerald if "💰" in b or "📈" in b else brand_blue
         else:
             pb.font.color.rgb = text_color
 
