@@ -3,18 +3,30 @@
 
 ---
 
-## 📸 Real Application Screenshots
+## 📸 Real Application Screenshots & Terminal Logs
 
 ### 1. 📊 Live Dashboard & Ops Command Center
 ![Command Dashboard Overview](docs/screenshots/dashboard_overview.png)
 
-### 2. 🎫 Incident Management Console & AI Routing Queue
+### 2. ⚡ Agentic AI Ticket Router (Live Terminal Logs)
+![Agentic AI Ticket Router Logs](docs/screenshots/ai_router_terminal.png)
+
+```text
+[10:37:19 am] ⚡ Scan #311: Found 51 unassigned tickets. Successfully routed 1 tickets!
+  ➔ Ticket INC0000950 auto-assigned to "Network Ops" (Alex Rivera (Network Team Lead)) with 95% confidence.
+[10:37:34 am] ⚡ Scan #312: Found 50 unassigned tickets. Successfully routed 1 tickets!
+  ➔ Ticket INC0000952 auto-assigned to "DBA Team" (DBA Team Lead) with 90% confidence.
+[10:37:49 am] ⚡ Scan #313: Found 49 unassigned tickets. Successfully routed 1 tickets!
+  ➔ Ticket INC0000952 auto-assigned to "DBA Team" (DBA Team Lead) with 90% confidence.
+```
+
+### 3. 🎫 Incident Management Console & AI Routing Queue
 ![Incident Management Console](docs/screenshots/incident_list.png)
 
-### 3. 🔍 Incident Detail, AI Diagnostic Work Notes & Activity Stream
+### 4. 🔍 Incident Detail, AI Diagnostic Work Notes & Activity Stream
 ![Incident Detail & Diagnostics](docs/screenshots/incident_detail.png)
 
-### 4. 📚 Continuous Knowledge Base & KEDB Synthesizer
+### 5. 📚 Continuous Knowledge Base & KEDB Synthesizer
 ![Knowledge Base Catalog](docs/screenshots/knowledge_base.png)
 
 ---
