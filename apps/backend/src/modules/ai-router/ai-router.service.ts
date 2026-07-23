@@ -212,8 +212,8 @@ export class AiRouterService implements OnModuleInit {
       };
     }
 
-    // Process 2 tickets sequentially per scan interval to guarantee execution stays under 15s (well within 60s MCP timeout)
-    const batch = freshUnassigned.slice(0, 2);
+    // Process 5 tickets sequentially per scan interval
+    const batch = freshUnassigned.slice(0, 5);
     const results = [];
     let routedCount = 0;
 
@@ -226,13 +226,18 @@ export class AiRouterService implements OnModuleInit {
       try {
         this.logger.log(`⏳ [Sequential Worker] Starting NVIDIA Nemotron 3 550B LLM analysis on ${cleanId}...`);
         const res = await this.routeIncident(tenantId, cleanId);
-        if (res && res.success) routedCount++;
+        if (res && res.success) {
+          routedCount++;
+        } else {
+          this.processedIncidentIds.delete(cleanId);
+        }
         results.push(res);
 
-        // Deliberate 2.0 second pause between tickets to pace NVIDIA API calls perfectly
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // Deliberate 1.0 second pause between tickets to pace API calls perfectly
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (err: any) {
-        this.logger.error(`Error routing unassigned incident ${cleanId} via NVIDIA LLM: ${err.message}`);
+        this.processedIncidentIds.delete(cleanId);
+        this.logger.error(`Error routing unassigned incident ${cleanId}: ${err.message}`);
       }
     }
 
