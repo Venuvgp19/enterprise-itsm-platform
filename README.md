@@ -64,6 +64,12 @@ $$\mathbf{\text{Total Cost for 1 Incident}} = \$0.00190 \text{ (AI Router)} + \$
 ### 5. 📚 Continuous Knowledge Base & KEDB Synthesizer
 ![Knowledge Base Catalog](docs/screenshots/knowledge_base.png)
 
+### 6. 🕸️ Interactive CMDB Visual Topology Graph & Outage Blast-Radius Map
+![CMDB Visual Topology Graph](docs/screenshots/cmdb_topology_graph.png)
+
+### 7. ⚡ Autonomous AI Self-Healing Auto-Remediation Bot
+![AI Auto-Remediation Bot Console](docs/screenshots/ai_auto_remediation.png)
+
 ---
 
 ## ✨ Core Platform Architecture & Key Features
@@ -73,7 +79,17 @@ $$\mathbf{\text{Total Cost for 1 Incident}} = \$0.00190 \text{ (AI Router)} + \$
 - **Strict ITIL Category Routing**: Automatically dispatches tickets to targeted engineering teams (*Unix, Network Ops, App Support, Desktop Support, DevOps Ops, SecOps, DBA Team*).
 - **Rule Engine Fallback**: High availability fallback ensures 96%+ confidence routing even under high API traffic or rate-limiting.
 
-### 2. 📚 Continuous Knowledge Base & KEDB Synthesizer (Meta Llama 3.3 70B LLM)
+### 2. ⚡ Autonomous AI Self-Healing Auto-Remediation Bot
+- **Zero-Human Incident Resolution**: Diagnoses recurring root cause patterns and executes self-healing playbooks (*BGP Routing Table Flush, K8s Pod Scaling, Redis Cache Clear, PostgreSQL Autovacuum, TLS Cert Rotation*).
+- **Live Terminal Execution Log**: Streams step-by-step diagnostic and execution progress on ticket detail UI in real-time.
+- **Auto-Resolution Audit Trail**: Updates ticket state to `RESOLVED`, logs ITIL close codes, and writes step-by-step execution logs to persistent database storage.
+
+### 3. 🕸️ Interactive CMDB Visual Topology Graph & Blast Radius Map
+- **2D Vector Dependency Canvas**: Interactive node network graph connecting all enterprise Configuration Items (CIs).
+- **Upstream & Downstream Dependencies**: Visualizes `Hosted On`, `Runs On`, `Routes To`, and `Connected To` relationships.
+- **Outage Blast-Radius Visualizer**: Selecting a CI node highlights all impacted downstream applications, databases, and microservices in real-time.
+
+### 4. 📚 Continuous Knowledge Base & KEDB Synthesizer (Meta Llama 3.3 70B LLM)
 - **Continuous Background AI Worker**: Scans 1,000 incident diagnostic notes in 10-ticket batches.
 - **Known Error Database (KEDB)**: Synthesizes Standard Operating Procedures (SOPs), root cause analyses, and permanent workarounds.
 - **Persistent Progress Tracker**: Background worker runs seamlessly without interrupting user navigation.

@@ -59,13 +59,23 @@ export class IncidentController {
 
   @Public()
   @Post(':id/activities')
-  @ApiOperation({ summary: 'Add a work note or customer comment to incident activity timeline' })
+  @ApiOperation({ summary: 'Add internal Work Note or Customer Comment to incident' })
   async addActivity(
     @CurrentUser('tenantId') tenantId: string,
     @CurrentUser('id') authorId: string,
     @Param('id') id: string,
     @Body() dto: AddActivityDto,
   ) {
-    return this.incidentService.addActivity(tenantId || 'demo-tenant-id', id, authorId || 'monitoring-bot-id', dto);
+    return this.incidentService.addActivity(tenantId || 'demo-tenant-id', id, authorId || 'admin-user-id', dto);
+  }
+
+  @Public()
+  @Post(':id/remediate')
+  @ApiOperation({ summary: 'Execute Autonomous AI Self-Healing Auto-Remediation Playbook' })
+  async remediate(
+    @CurrentUser('tenantId') tenantId: string,
+    @Param('id') id: string,
+  ) {
+    return this.incidentService.remediate(tenantId || 'demo-tenant-id', id);
   }
 }

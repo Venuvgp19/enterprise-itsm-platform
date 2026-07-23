@@ -15,6 +15,9 @@ import {
   CheckCircle2,
   Lock,
   Tag,
+  Zap,
+  Terminal,
+  RefreshCw,
 } from 'lucide-react';
 
 const sampleTitles = [
@@ -104,6 +107,77 @@ export default function IncidentDetailPage() {
   const [commentText, setCommentText] = useState('');
   const [isWorkNote, setIsWorkNote] = useState(true);
 
+  // Auto-Remediation Modal state
+  const [isRemediating, setIsRemediating] = useState(false);
+  const [remediationModalOpen, setRemediationModalOpen] = useState(false);
+  const [remediationLogs, setRemediationLogs] = useState<string[]>([]);
+  const [remediationDone, setRemediationDone] = useState(false);
+
+  const fetchIncident = async () => {
+    try {
+      const res = await fetch(`/api/v1/incidents/${idParam}`);
+      if (res.ok) {
+        const inc = await res.json();
+        const mappedInc = {
+          id: inc.id || inc.number || idParam.toUpperCase(),
+          number: inc.number || idParam,
+          title: inc.shortDescription || inc.title || `Incident ${idParam}`,
+          priority: inc.priority || 'P2 - HIGH',
+          state: inc.state || 'NEW',
+          department: inc.department || 'UNASSIGNED (No Team)',
+          assignedTo: inc.assignedTo || 'UNASSIGNED (Unassigned)',
+          resolutionCode: inc.resolutionCode || 'Pending Triage',
+          resolutionNotes: inc.resolutionNotes || '',
+          caller: inc.caller || 'Monitoring Bot',
+          ci: inc.configurationItem || 'router-border-nyc-01',
+          description: inc.description || `Incident Record ${idParam}`,
+          createdAt: inc.createdAt || '2026-07-21 10:14 UTC',
+        };
+        setIncident(mappedInc);
+        setState(mappedInc.state);
+        setResCode(mappedInc.resolutionCode);
+        if (Array.isArray(inc.activities) && inc.activities.length > 0) {
+          setActivities(inc.activities);
+        }
+        return;
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
+  const handleExecuteAutoRemediation = async () => {
+    try {
+      setIsRemediating(true);
+      setRemediationModalOpen(true);
+      setRemediationLogs(['🤖 Initializing Autonomous AI Self-Healing Agent...']);
+      setRemediationDone(false);
+
+      const res = await fetch(`/api/v1/incidents/${incident.id}/remediate`, {
+        method: 'POST',
+      });
+      const result = await res.json();
+
+      if (result && result.executionSteps) {
+        for (let i = 0; i < result.executionSteps.length; i++) {
+          await new Promise((r) => setTimeout(r, 800));
+          setRemediationLogs((prev) => [...prev, result.executionSteps[i]]);
+        }
+        await new Promise((r) => setTimeout(r, 600));
+        setRemediationLogs((prev) => [
+          ...prev,
+          `🎉 Ticket ${incident.id} auto-healed & status updated to RESOLVED!`,
+        ]);
+        setRemediationDone(true);
+        fetchIncident();
+      }
+    } catch (err) {
+      setRemediationLogs((prev) => [...prev, '❌ Error executing remediation playbook.']);
+    } finally {
+      setIsRemediating(false);
+    }
+  };
+
   useEffect(() => {
     const fetchIncident = async () => {
       try {
@@ -174,7 +248,7 @@ export default function IncidentDetailPage() {
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Navigation Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <button
           onClick={() => router.push('/incidents')}
           className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-100 transition"
@@ -182,9 +256,17 @@ export default function IncidentDetailPage() {
           <ArrowLeft className="w-4 h-4" /> Back to 1,000 Incident Matrix
         </button>
         <div className="flex items-center gap-3">
+          <button
+            onClick={handleExecuteAutoRemediation}
+            disabled={isRemediating}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 hover:from-amber-500 hover:to-red-500 text-white font-extrabold text-xs shadow-lg shadow-orange-500/20 transition-all transform active:scale-95 disabled:opacity-50"
+          >
+            <Zap className={`w-4 h-4 text-amber-200 ${isRemediating ? 'animate-spin' : ''}`} />
+            {isRemediating ? 'Executing AI Remediation...' : '⚡ Execute AI Auto-Remediation'}
+          </button>
           <span className="text-xs text-slate-400 font-mono">Incident ID: {incident.id}</span>
           <span className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" /> State: RESOLVED
+            <CheckCircle2 className="w-4 h-4" /> State: {state}
           </span>
         </div>
       </div>
@@ -387,6 +469,69 @@ export default function IncidentDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Autonomous AI Auto-Remediation Modal */}
+      {remediationModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-amber-500/30 rounded-2xl p-6 max-w-2xl w-full space-y-4 shadow-2xl">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                  <Zap className="w-6 h-6 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                    Autonomous AI Self-Healing Remediation Agent
+                  </h3>
+                  <p className="text-xs text-slate-400 font-mono">
+                    Executing Self-Healing Playbook on {incident.id} ({incident.ci})
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setRemediationModalOpen(false)}
+                disabled={isRemediating}
+                className="text-slate-400 hover:text-white text-xs font-bold font-mono px-3 py-1 bg-slate-800 rounded-lg disabled:opacity-50"
+              >
+                Close Window
+              </button>
+            </div>
+
+            {/* Terminal Console View */}
+            <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 font-mono text-xs text-emerald-400 space-y-2 max-h-72 overflow-y-auto shadow-inner">
+              <div className="flex items-center gap-2 text-slate-500 text-[11px] pb-2 border-b border-slate-900">
+                <Terminal className="w-4 h-4 text-slate-400" />
+                <span>AI Remediation Worker Console Stream</span>
+              </div>
+              {remediationLogs.map((log, idx) => (
+                <div key={idx} className="leading-relaxed animate-fadeIn">
+                  {log}
+                </div>
+              ))}
+              {isRemediating && (
+                <div className="flex items-center gap-2 text-amber-400 animate-pulse pt-2">
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Executing autonomous diagnostics & self-healing playbook...</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between items-center text-xs pt-2">
+              <span className="text-slate-400">
+                Status: {remediationDone ? '✅ Remediation Complete' : '⏳ Processing Playbook...'}
+              </span>
+              {remediationDone && (
+                <button
+                  onClick={() => setRemediationModalOpen(false)}
+                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition"
+                >
+                  View Resolved Incident Details
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

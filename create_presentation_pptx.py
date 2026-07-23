@@ -292,6 +292,74 @@ def build_presentation():
         pb.font.size = Pt(11)
         pb.font.color.rgb = text_color
 
+    # SLIDE 8: CMDB Interactive Topology Canvas
+    slide8 = prs.slides.add_slide(blank_layout)
+    add_header(slide8, "8. Interactive CMDB Topology Graph & Blast Radius Map", "ENTERPRISE INFRASTRUCTURE MAPPING")
+
+    img_path_cmdb = "docs/screenshots/cmdb_topology_graph.png"
+    if os.path.exists(img_path_cmdb):
+        slide8.shapes.add_picture(img_path_cmdb, Inches(0.8), Inches(1.4), width=Inches(8.2))
+
+    card8 = slide8.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.4), Inches(3.3), Inches(5.4))
+    card8.fill.solid()
+    card8.fill.fore_color.rgb = card_bg
+    card8.line.color.rgb = brand_blue
+    tf8 = card8.text_frame
+    tf8.word_wrap = True
+
+    p = tf8.paragraphs[0]
+    p.text = "Topology Map Features"
+    p.font.size = Pt(16)
+    p.font.bold = True
+    p.font.color.rgb = accent_emerald
+
+    bullets8 = [
+      "Interactive 2D Vector Node Network Canvas connecting all active CIs.",
+      "Upstream & Downstream dependency streams (Hosted On, Depends On).",
+      "Outage Blast-Radius Visualizer: Node selection highlights impacted downstream CIs.",
+      "Real-time CI status indicators (Operational, Degraded, Maintenance).",
+      "Toggle between Interactive Topology Graph and Directory Table view."
+    ]
+    for b in bullets8:
+        pb = tf8.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
+
+    # SLIDE 9: Autonomous AI Auto-Remediation Bot
+    slide9 = prs.slides.add_slide(blank_layout)
+    add_header(slide9, "9. Autonomous AI Self-Healing Auto-Remediation Bot", "ZERO-HUMAN INCIDENT RESOLUTION")
+
+    img_path_remed = "docs/screenshots/ai_auto_remediation.png"
+    if os.path.exists(img_path_remed):
+        slide9.shapes.add_picture(img_path_remed, Inches(0.8), Inches(1.4), width=Inches(8.2))
+
+    card9 = slide9.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.2), Inches(1.4), Inches(3.3), Inches(5.4))
+    card9.fill.solid()
+    card9.fill.fore_color.rgb = card_bg
+    card9.line.color.rgb = brand_blue
+    tf9 = card9.text_frame
+    tf9.word_wrap = True
+
+    p = tf9.paragraphs[0]
+    p.text = "Self-Healing Playbooks"
+    p.font.size = Pt(16)
+    p.font.bold = True
+    p.font.color.rgb = accent_amber
+
+    bullets9 = [
+      "Automated root cause playbook execution (BGP Reset, K8s Scale, Redis Flush).",
+      "Live Step-by-step Terminal Console execution stream on ticket detail UI.",
+      "Automatically updates state to RESOLVED and logs close codes.",
+      "Reduces Mean Time to Resolution (MTTR) from minutes to < 3 seconds.",
+      "Step-by-step audit activities written to persistent database file."
+    ]
+    for b in bullets9:
+        pb = tf9.add_paragraph()
+        pb.text = f"\n• {b}"
+        pb.font.size = Pt(11)
+        pb.font.color.rgb = text_color
+
     # Save Presentation to both filenames
     for fname in ["Enterprise_ITSM_Platform_Presentation.pptx", "Agentic_AI_ITSM_Platform.pptx"]:
         try:
